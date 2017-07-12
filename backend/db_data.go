@@ -7,6 +7,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+//GetAllRows ....
+func GetAllRows(db *sql.DB, queryToRun string) *sql.Rows {
+	defer db.Close()
+	// Execute the query
+	rows, err := db.Query(queryToRun)
+	checkErr(err)
+	return rows
+}
+
 //GetData Gets data from the server
 func GetData(db *sql.DB, queryToRun string) {
 
@@ -14,9 +23,7 @@ func GetData(db *sql.DB, queryToRun string) {
 	defer db.Close()
 	// Execute the query
 	rows, err := db.Query(queryToRun)
-	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
-	}
+	checkErr(err)
 
 	// Get column names
 	columns, err := rows.Columns()
