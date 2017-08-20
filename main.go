@@ -12,7 +12,6 @@ import (
 
 	"bytes"
 	"encoding/json"
-	//"html/template"
 
 )
 
@@ -34,21 +33,34 @@ func printData(db *sql.DB) {
 
 	app.Post("/query", func(ctx context.Context) {
 		query := ctx.PostValue("query")
-		ctx.ViewData("data", query)
+		wfDbs := dbutil.GetWfDB("")
+
+		wfBasedDatas  := []dbutil.Webdata{}
+		for _, col := range wfDbs {
+			wfdata := dbutil.QueryDB( col.IpAddress, col.WfSchemaName, query, "Workflow Data" ,  col.Id+" : "+ col.WfSchemaName+ " : "+col.IpAddress, col.DataSourceName)
+			wfBasedDatas = append(wfBasedDatas, wfdata)
+		}
+		ctx.ViewData("data", wfBasedDatas[0])
+
+		//ch := make(chan dbutil.Webdata)
+		//for _, col := range wfDbs {
+		//	go  dbutil.QueryDBChannel( col.IpAddress, col.WfSchemaName, query, "Workflow Data" ,  col.Id+" : "+ col.WfSchemaName+ " : "+col.IpAddress, col.DataSourceName, ch)
+		//}
+		//webData := <- ch
+		//ctx.ViewData("data", webData)
+
 
 		ctx.View("result.html")
 
 	})
 
 	app.Get("/wf", func(ctx context.Context) {
-
 		query := "select * from ps_wf_instance"
 		wdata := dbutil.QueryDB("", "", query, "MyTitle" ,  "WF Heading", " Grid title")
 
 		ctx.ViewData("data", wdata)
 		//ctx.View("hello.html")
 		ctx.View("result.html")
-
 	})
 
 	app.Get("/json", func(ctx context.Context) {
@@ -56,7 +68,6 @@ func printData(db *sql.DB) {
 		b, _ = prettyprint(b)
 		fmt.Printf("%s", b)
 	})
-
 
 
 	// Start the server using a network address and block.
