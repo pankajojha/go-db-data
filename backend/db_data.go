@@ -73,13 +73,15 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 
 	wdata.NumOfRows = rows
 
+
+
 	// Fetch rows
 	for rows.Next() {
 		err = rows.Scan(scanArgs...)
 		CheckErr(err)
 		// Print data
 		vData := Data{}
-
+		//datas := make([]Data{}, len(columns))
 		var rowData string
 		for _, col := range values {
 			switch col.(type) {
