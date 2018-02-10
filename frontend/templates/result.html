@@ -24,9 +24,21 @@
             {{end}}
         </tr>
 
+        <!--<tr bgcolor="#5f9ea0" >-->
+            <!--{{range $rIdx, $rData := .RowData}}-->
+                <!--{{$rData.Value}}<br/>-->
+            <!--{{end}}-->
+        <!--</tr>-->
+
+        <!--<tr bgcolor="#5f9ea0" >-->
+            <!--{{range $rIdx, $rData := .ValueData}}-->
+            <!--{{$rData}}<br/>-->
+            <!--{{end}}-->
+        <!--</tr>-->
+
         <tr bgcolor="#5f9ea0" >
-            {{range $rIdx, $rData := .RowData}}
-                {{$rData.Value}}<br/>
+            {{range $rIdx, $rData := .RowDatas}}
+            {{$rData.Value}}<br/>
             {{end}}
         </tr>
 

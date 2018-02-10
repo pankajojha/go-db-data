@@ -9,12 +9,18 @@ type Data struct {
 	Value string
 }
 
+type Datas struct {
+	Value[] string
+}
+
 type Webdata struct {
 	Title string
 	Heading string
 	GridTitle string
 	ColumnHeading []string
 	RowData []Data
+	RowDatas []Datas
+	ValueData []interface{}
 	NumOfRows *sql.Rows
 }
 
@@ -35,6 +41,11 @@ func (webData *Webdata) AddColumnHeading(data string) []string {
 func (webData *Webdata) AddRowData(data Data) []Data {
 	webData.RowData = append(webData.RowData, data)
 	return webData.RowData
+}
+
+func (webData *Webdata) AddRowsData(data Datas) []Datas {
+	webData.RowDatas = append(webData.RowDatas, data)
+	return webData.RowDatas
 }
 
 func QueryDBChannel(ip string, schema string, query string, title string, heading string, gridTitle string, c chan Webdata) {
@@ -81,23 +92,30 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 		CheckErr(err)
 		// Print data
 		vData := Data{}
-		//datas := make([]Data{}, len(columns))
+
+	//	datas :=  make([]Datas{}, len(columns))
+		datas := make([]string, len(columns))
+		vDatas := Datas{}
+
 		var rowData string
-		for _, col := range values {
+		for i, col := range values {
 			switch col.(type) {
 			case nil:
-				rowData +="NULL "
+				rowData ="NULL "
 			case []byte:
-				rowData +=  string(col.([]byte))
+				rowData =  string(col.([]byte))
 			default:
-				rowData +=  fmt.Sprint(col)
+				rowData =  fmt.Sprint(col)
 			}
-			rowData += " | "
+			//rowData += " | "
 			vData.Value = rowData
-
+			datas[i] = rowData
 			//fmt.Println(columns[i], ": ", rowData)
 		}
-		wdata.AddRowData(vData)
+		vDatas.Value = datas
+		//wdata.AddRowData(vData)
+		wdata.AddRowsData(vDatas)
+		wdata.ValueData = values
 
 	}
 	return wdata
