@@ -3,6 +3,6 @@
     "port": "3306",
     "userName": "root",
     "password": "root",
-    "db": "epenops"
-
+    "db": "schema",
+    "dbTable": "ip_table"
 }

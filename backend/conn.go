@@ -14,6 +14,7 @@ type DBConfig struct {
 	Password string
 	Port     string
 	Db       string
+	DbTable  string
 }
 
 //ReadConfig ...
@@ -40,7 +41,7 @@ func GetDB(connection string) *sql.DB {
 }
 
 //GetDbByIp is used to get connection
-func GetDbByIp(ip string, dbName string) *sql.DB {
+func GetDbByIP(ip string, dbName string) *sql.DB {
 	config := ReadConfig()
 
 	if ip == "" {

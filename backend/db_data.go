@@ -60,7 +60,7 @@ func GetDbDataOnChan(wfRespond chan<- Webdata, wg *sync.WaitGroup, query string,
 
 func QueryDB(ip string, schema string, query string, title string, heading string, gridTitle string) Webdata {
 
-	db := GetDbByIp(ip, schema)
+	db := GetDbByIP(ip, schema)
 
 	wdata := Webdata{Title: title, Heading: heading, GridTitle: gridTitle}
 	rows, err := GetData(db, query)
@@ -145,9 +145,10 @@ func CheckErr(err error) {
 
 func GetWfDB(ip string) []WfDb {
 
-	db := GetDbByIp(ip, "epenops")
+	config := ReadConfig()
+	db := GetDbByIP(ip, "epenops")
 
-	query := "select * from ps_wf_instance"
+	query := "select * from " + config.DbTable
 
 	rows, err := GetData(db, query)
 	columns, err := rows.Columns()
@@ -191,7 +192,6 @@ func GetWfDB(ip string) []WfDb {
 			} else if columns[i] == "datasource_name" {
 				wfDb.DataSourceName = rowData
 			}
-
 		}
 		wfDbs = append(wfDbs, wfDb)
 	}

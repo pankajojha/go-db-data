@@ -1,9 +1,16 @@
+<!DOCTYPE html>
 <html>
+
+<head>
+    <meta charset="UTF-8" />
+</head>
 
 <body>
     {{range .}}
-    <h1>{{.Title}}</h1>
-    <h1>{{.Heading}} </h1>
+    <!-- <h1>{{.Title}}</h1> -->
+    <h3>{{.Heading}} </h3>
+
+    {{ $length := len .RowDatas }} {{ if le $length 0 }} Sorry. No matching results found {{ else }}
 
     <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
         <tr>{{range $cIdx, $colheading := .ColumnHeading}}
@@ -14,17 +21,14 @@
 
 
     <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
-
         {{range $cIdx, $data := .RowDatas}}
         <tr>
-            <th>{{$data}}</th>
+            <td>{{$data}}</td>
         </tr>
         {{end}}
-
     </table>
 
-
-    {{end}}
+    {{ end }} {{end}}
 
 
 </body>
