@@ -3,48 +3,48 @@
 
 <head>
 
-    <title>{{.Title}}</title></head>
+    <title>{{.Title}}</title>
+</head>
 
 <body>
-<h1>{{.Heading}} </h1>
+    <h1>{{.Heading}} </h1>
 
 
-<div id="gridviewcontainer">
+    <div id="gridviewcontainer">
 
 
-    <div id="gridtitle">
-        {{.GridTitle}}
-    </div>
+        <div id="gridtitle">
+            {{.GridTitle}}
+        </div>
 
 
-    <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
+        <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
 
-        <tr>{{range $cIdx, $colheading := .ColumnHeading}}
-            <th>{{$colheading}}</th>
-            {{end}}
-        </tr>
+            <tr>{{range $cIdx, $colheading := .ColumnHeading}}
+                <th>{{$colheading}}</th>
+                {{end}}
+            </tr>
 
-        <!--<tr bgcolor="#5f9ea0" >-->
+            <!--<tr bgcolor="#5f9ea0" >-->
             <!--{{range $rIdx, $rData := .RowData}}-->
-                <!--{{$rData.Value}}<br/>-->
+            <!--{{$rData.Value}}<br/>-->
             <!--{{end}}-->
-        <!--</tr>-->
+            <!--</tr>-->
 
-        <!--<tr bgcolor="#5f9ea0" >-->
+            <!--<tr bgcolor="#5f9ea0" >-->
             <!--{{range $rIdx, $rData := .ValueData}}-->
             <!--{{$rData}}<br/>-->
             <!--{{end}}-->
-        <!--</tr>-->
+            <!--</tr>-->
 
-        <tr bgcolor="#5f9ea0" >
-            {{range $rIdx, $rData := .RowDatas}}
-            {{$rData.Value}}<br/>
-            {{end}}
-        </tr>
+            <tr bgcolor="#5f9ea0">
+                {{range $rIdx, $rData := .RowDatas}} {{$rData.Value}}
+                <br/> {{end}}
+            </tr>
 
 
-    </table>
-</div>
+        </table>
+    </div>
 
 
 </body>

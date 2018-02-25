@@ -3,6 +3,7 @@ package dbutil
 import (
 	"database/sql"
 	"fmt"
+	"sync"
 )
 
 type Data struct {
@@ -10,27 +11,26 @@ type Data struct {
 }
 
 type Datas struct {
-	Value[] string
+	Value []string
 }
 
 type Webdata struct {
-	Title string
-	Heading string
-	GridTitle string
+	Title         string
+	Heading       string
+	GridTitle     string
 	ColumnHeading []string
-	RowData []Data
-	RowDatas []Datas
-	ValueData []interface{}
-	NumOfRows *sql.Rows
+	RowData       []Data
+	RowDatas      []Datas
+	ValueData     []interface{}
+	NumOfRows     *sql.Rows
 }
 
-
 type WfDb struct {
-	Id 		string
-	WfSchemaName 	string
-	IpAddress string
+	Id             string
+	WfSchemaName   string
+	IpAddress      string
 	DataSourceName string
-	AccountName string
+	AccountName    string
 }
 
 func (webData *Webdata) AddColumnHeading(data string) []string {
@@ -49,8 +49,13 @@ func (webData *Webdata) AddRowsData(data Datas) []Datas {
 }
 
 func QueryDBChannel(ip string, schema string, query string, title string, heading string, gridTitle string, c chan Webdata) {
-	webData := QueryDB( ip, schema, query, title ,  heading, gridTitle)
+	webData := QueryDB(ip, schema, query, title, heading, gridTitle)
 	c <- webData
+}
+
+func GetDbDataOnChan(wfRespond chan<- Webdata, wg *sync.WaitGroup, query string, ns string, col WfDb) {
+	defer wg.Done()
+	wfRespond <- QueryDB(col.IpAddress, col.WfSchemaName, query, ns, col.Id+" : "+col.WfSchemaName+" : "+col.IpAddress, col.DataSourceName)
 }
 
 func QueryDB(ip string, schema string, query string, title string, heading string, gridTitle string) Webdata {
@@ -58,17 +63,16 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 	db := GetDbByIp(ip, schema)
 
 	wdata := Webdata{Title: title, Heading: heading, GridTitle: gridTitle}
-	rows, err :=GetData(db, query)
+	rows, err := GetData(db, query)
 
 	if err != nil {
-		errorData := Data{" Error in query : "+query}
+		errorData := Data{" Error in query : " + query}
 		wdata.AddRowData(errorData)
 		return wdata
 	}
 
 	columns, err := rows.Columns()
 	CheckErr(err)
-
 
 	// Make a slice for the values
 	values := make([]interface{}, len(columns))
@@ -78,13 +82,11 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 		scanArgs[i] = &values[i]
 	}
 	//fill table headings, the table returns 9 columns so I just hard coded it
-	for j:=0;j<len(columns);j++ {
+	for j := 0; j < len(columns); j++ {
 		wdata.AddColumnHeading(columns[j])
 	}
 
 	wdata.NumOfRows = rows
-
-
 
 	// Fetch rows
 	for rows.Next() {
@@ -93,7 +95,7 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 		// Print data
 		vData := Data{}
 
-	//	datas :=  make([]Datas{}, len(columns))
+		//	datas :=  make([]Datas{}, len(columns))
 		datas := make([]string, len(columns))
 		vDatas := Datas{}
 
@@ -101,11 +103,11 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 		for i, col := range values {
 			switch col.(type) {
 			case nil:
-				rowData ="NULL "
+				rowData = "NULL "
 			case []byte:
-				rowData =  string(col.([]byte))
+				rowData = string(col.([]byte))
 			default:
-				rowData =  fmt.Sprint(col)
+				rowData = fmt.Sprint(col)
 			}
 			//rowData += " | "
 			vData.Value = rowData
@@ -128,7 +130,7 @@ func GetData(db *sql.DB, queryToRun string) (*sql.Rows, error) {
 	// Execute the query
 	rows, err := db.Query(queryToRun)
 	if err != nil {
-		return rows, fmt.Errorf("sql: can not query with query  "+queryToRun+"  %v",  err)
+		return rows, fmt.Errorf("sql: can not query with query  "+queryToRun+"  %v", err)
 	}
 
 	return rows, err
@@ -141,15 +143,13 @@ func CheckErr(err error) {
 	}
 }
 
-
-
 func GetWfDB(ip string) []WfDb {
 
 	db := GetDbByIp(ip, "epenops")
 
 	query := "select * from ps_wf_instance"
 
-	rows, err :=GetData(db, query)
+	rows, err := GetData(db, query)
 	columns, err := rows.Columns()
 	CheckErr(err)
 
@@ -174,21 +174,21 @@ func GetWfDB(ip string) []WfDb {
 		for i, col := range values {
 			switch col.(type) {
 			case nil:
-				rowData ="NULL "
+				rowData = "NULL "
 			case []byte:
-				rowData =  string(col.([]byte))
+				rowData = string(col.([]byte))
 			default:
-				rowData =  fmt.Sprint(col)
+				rowData = fmt.Sprint(col)
 			}
 			if columns[i] == "ps_wf_instance_id" {
 				wfDb.Id = rowData
-			}else if columns[i] == "ip_address"{
+			} else if columns[i] == "ip_address" {
 				wfDb.IpAddress = rowData
-			}else if columns[i] == "schema_name"{
+			} else if columns[i] == "schema_name" {
 				wfDb.WfSchemaName = rowData
-			}else if columns[i] == "account_name"{
+			} else if columns[i] == "account_name" {
 				wfDb.AccountName = rowData
-			}else if columns[i] == "datasource_name"{
+			} else if columns[i] == "datasource_name" {
 				wfDb.DataSourceName = rowData
 			}
 
@@ -197,4 +197,3 @@ func GetWfDB(ip string) []WfDb {
 	}
 	return wfDbs
 }
-

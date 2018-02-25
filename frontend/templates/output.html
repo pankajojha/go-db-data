@@ -1,0 +1,32 @@
+<html>
+
+<body>
+    {{range .}}
+    <h1>{{.Title}}</h1>
+    <h1>{{.Heading}} </h1>
+
+    <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
+        <tr>{{range $cIdx, $colheading := .ColumnHeading}}
+            <th>{{$colheading}}</th>
+            {{end}}
+        </tr>
+    </table>
+
+
+    <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
+
+        {{range $cIdx, $data := .RowDatas}}
+        <tr>
+            <th>{{$data}}</th>
+        </tr>
+        {{end}}
+
+    </table>
+
+
+    {{end}}
+
+
+</body>
+
+</html>
