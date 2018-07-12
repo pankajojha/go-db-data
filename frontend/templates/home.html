@@ -3,12 +3,55 @@
 
 <head>
     <meta charset="UTF-8" />
+    <style>
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #f4511e;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+        
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+        
+        .button:hover span {
+            padding-right: 25px;
+        }
+        
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <form action="/query" method="post" id="queryForm">
-        <textarea name="query" rows="20" cols="100"></textarea>
-        <input type="submit" value="Query">
+    <h1>NOTE: Any Query here will run on all the Wf's concurrently </h1>
+    <form action="/wf" method="post" id="queryForm">
+        <textarea name="query" rows="30" cols="150"></textarea>
+
+        <button class="button" style="vertical-align:middle"><span>Query </span></button>
     </form>
 </body>
 

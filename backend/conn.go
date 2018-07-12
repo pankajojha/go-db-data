@@ -1,4 +1,4 @@
-package dbutil
+package backend
 
 import (
 	"database/sql"
@@ -9,12 +9,24 @@ import (
 
 //DBConfig ...
 type DBConfig struct {
-	Host     string
-	UserName string
-	Password string
-	Port     string
-	Db       string
-	DbTable  string
+	Host              string
+	UserName          string
+	Password          string
+	Port              string
+	Db                string
+	DbTable           string
+	Timeout           string
+	MaxOpenConnection int
+	MaxIdleConnection int
+	LogPath           string
+}
+
+var (
+	Config DBConfig
+)
+
+func init() {
+	Config = ReadConfig()
 }
 
 //ReadConfig ...
@@ -26,7 +38,6 @@ func ReadConfig() DBConfig {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-
 	return configuration
 }
 
@@ -42,17 +53,25 @@ func GetDB(connection string) *sql.DB {
 
 //GetDbByIp is used to get connection
 func GetDbByIP(ip string, dbName string) *sql.DB {
-	config := ReadConfig()
 
 	if ip == "" {
-		ip = config.Host
+		ip = Config.Host
 	}
 
 	if dbName == "" {
-		dbName = config.Db
+		dbName = Config.Db
 	}
-	connection := config.UserName + ":" + config.Password + "@tcp(" + ip + ":" + config.Port + ")/" + dbName
+	connection := Config.UserName + ":" + Config.Password + "@tcp(" + ip + ":" + Config.Port + ")/" + dbName
 	db, err := sql.Open("mysql", connection)
+
+	if Config.MaxOpenConnection != 0 {
+		db.SetMaxOpenConns(Config.MaxOpenConnection)
+	}
+
+	if Config.MaxIdleConnection != 0 {
+		db.SetMaxIdleConns(Config.MaxIdleConnection)
+	}
+
 	if err != nil {
 		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
 	}

@@ -6,13 +6,17 @@
 </head>
 
 <body>
+    <h1> Query Result </h1>
     {{range .}}
     <!-- <h1>{{.Title}}</h1> -->
-    <h3>{{.Heading}} </h3>
+    {{ $length := len .RowDatas }}
 
-    {{ $length := len .RowDatas }} {{ if le $length 0 }} Sorry. No matching results found {{ else }}
+    <!-- <h3>{{.Heading}} </h3> -->
+    {{ if gt $length 0 }}
 
-    <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
+    <h3>{{.Heading}} <span style="width:20px; color: blue;"> [ Record Count - {{ $length}} ]</span> </h3>
+
+    <table id="gridtable" cellpadding="10px" border="1" style="">
         <tr>{{range $cIdx, $colheading := .ColumnHeading}}
             <th>{{$colheading}}</th>
             {{end}}
@@ -20,7 +24,7 @@
     </table>
 
 
-    <table id="gridtable" cellpadding="10px" border="1" style="border-style: dashed">
+    <table id="gridtable" cellpadding="10px" border="1" style="">
         {{range $cIdx, $data := .RowDatas}}
         <tr>
             <td>{{$data}}</td>

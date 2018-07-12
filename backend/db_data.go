@@ -1,4 +1,4 @@
-package dbutil
+package backend
 
 import (
 	"database/sql"
@@ -125,7 +125,6 @@ func QueryDB(ip string, schema string, query string, title string, heading strin
 
 //GetData Gets data from the server
 func GetData(db *sql.DB, queryToRun string) (*sql.Rows, error) {
-	//db := GetDB(connectionString)
 	defer db.Close()
 	// Execute the query
 	rows, err := db.Query(queryToRun)
@@ -145,10 +144,10 @@ func CheckErr(err error) {
 
 func GetWfDB(ip string) []WfDb {
 
-	config := ReadConfig()
+	//config := ReadConfig()
 	db := GetDbByIP(ip, "epenops")
 
-	query := "select * from " + config.DbTable
+	query := "select * from " + Config.DbTable
 
 	rows, err := GetData(db, query)
 	columns, err := rows.Columns()
