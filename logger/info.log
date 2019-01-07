@@ -1,0 +1,9 @@
+2019/01/07 10:25:52 logger.go:28: LogFile : ./logger/info.log
+2019/01/07 10:26:05 main.go:45: UI userId  pwd 
+2019/01/07 10:26:05 auth.go:37: UserName %!(EXTRA string=, string= password , string=)
+2019/01/07 10:26:12 main.go:96: userIP: [%!(EXTRA string=[::1]:61388, string= [ , string=, string=])
+2019/01/07 10:26:12 main.go:110: <p>X-Forwarded-For : indicates this is the user's address (no proxy)<p>
+2019/01/07 10:26:12 main.go:54: Server v0.01 pid=13961 started with processes: 8
+2019/01/07 10:26:24 main.go:96: userIP: [%!(EXTRA string=[::1]:61388, string= [ , string=select * from config.item limit 1, string=])
+2019/01/07 10:26:24 main.go:110: <p>X-Forwarded-For : indicates this is the user's address (no proxy)<p>
+2019/01/07 10:26:24 main.go:64:   Query Executed  %!(EXTRA string=select * from config.item limit 1, string=])

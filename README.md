@@ -42,4 +42,4 @@ Below you will find some information on how to perform common tasks.<br>
     Linux example
     go build -o db_data.linux main_http.go
 
-    
+    GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -o db_data_log.linux main_http.go
