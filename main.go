@@ -10,8 +10,9 @@ import (
 	"runtime"
 	"sync"
 
+	"/backend"
+
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/pankajojha/go-db-data/backend"
 )
 
 var db *sql.DB
@@ -22,14 +23,16 @@ const (
 )
 
 func main() {
-
 	// public views
 	http.HandleFunc("/", LoginFunc)
 	// private views
 	http.HandleFunc("/query", QueryFunc)
 	http.HandleFunc("/wf", QueryWfFunc)
+
 	//http.HandleFunc("/query", PostOnly(BasicAuth(QueryFunc)))
 	//http.HandleFunc("/wf", PostOnly(BasicAuth(QueryWfFunc)))
+
+	//http.HandleFunc("/login", Login)
 
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle(STATIC_PATH, http.StripPrefix(STATIC_PATH, fs))
@@ -49,6 +52,7 @@ func LoginFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func QueryFunc(w http.ResponseWriter, r *http.Request) {
+
 	homeTmpl := template.Must(template.ParseFiles(STATIC_PATH + "/home.html"))
 	IndexPage(r)
 	backend.Log.Printf("Server v%s pid=%d started with processes: %d", VERSION, os.Getpid(), runtime.GOMAXPROCS(runtime.NumCPU()))

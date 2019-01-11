@@ -1,8 +1,10 @@
 {
-    "host": "127.0.0.1",
+    "host": "epen2-pv-main.cluster-cjodhwmh62kc.us-east-1.rds.amazonaws.com",
     "port": "3306",
-    "userName": "root",
-    "password": "root",
-    "db": "schema",
-    "dbTable": "ip_table"
+    "userName": "dba_admin",
+    "password": "XXXXXX",
+    "db": "epenops",
+    "dbTable": "ps_wf_instance",
+    "timeout": "180s",
+    "maxOpenConnection": 2
 }
